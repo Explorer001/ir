@@ -4,7 +4,7 @@ public class Porterstemmer {
 
 	public static void main(String[] args) {
 		Porterstemmer ps = new Porterstemmer();
-		System.out.println(ps.stemm("replacement"));
+		System.out.println(ps.stemm("controlling"));
 	}
 	
 	public Porterstemmer() {}
@@ -23,6 +23,8 @@ public class Porterstemmer {
 		m = getVCCount(term);
 		if (m > 0) term = replace(replacements_s3, term);
 		term = step4(term);
+		term = step5a(term);
+		term = step5b(term);
 		return term;
 	}
 	
@@ -159,6 +161,19 @@ public class Porterstemmer {
 				}
 			}
 		}
+		return term;
+	}
+	
+	private String step5a(String term) {
+		int m = getVCCount(term);
+		if (m > 1) return term.replaceFirst("e$", "");
+		else if (m == 1 && !term.endsWith("o")) return term.replaceFirst("e$", "");
+		return term;
+	}
+	
+	private String step5b(String term) {
+		int m = getVCCount(term);
+		if (m > 1 && endsOnDouble(term) && term.endsWith("l")) term = term.substring(0, term.length()-1);
 		return term;
 	}
 
