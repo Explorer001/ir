@@ -4,17 +4,27 @@ public class Porterstemmer {
 
 	public static void main(String[] args) {
 		Porterstemmer ps = new Porterstemmer();
-		System.out.println(getVCCount("fil"));
-		System.out.println(endsOnCVC("fil"));
-		System.out.println(ps.step1a("troubles"));
-		System.out.println(ps.step1b("plastered"));
-		System.out.println(ps.step1c("happy"));
-		System.out.println(ps.step1c("sky"));
-		System.out.println(ps.step2("hopefulness"));
-		System.out.println(ps.step3("electrical"));
+		System.out.println(ps.stemm("replacement"));
 	}
 	
 	public Porterstemmer() {}
+	
+	public String stemm(String term) {
+		int m;
+		String[][] replacements_s1a = {{"sses", "ss"},{"ies", "i"},{"ss", "ss"},{"s",""}};
+		String[][] replacements_s2 = {{"ational", "ate"}, {"tional", "tion"}, {"enci", "ence"}, {"anci", "ance"}, {"izer", "ize"}, {"abli", "able"}, {"alli", "al"}, {"entli", "ent"}, {"eli", "e"}, {"ousli", "ous"}, {"ization", "ize"}, {"ation", "ate"}, {"ator", "ate"}, {"alism", "al"}, {"iveness", "ive"}, {"fulness", "ful"}, {"ousness", "ous"}, {"aliti", "al"}, {"iviti", "ive"}, {"biliti", "ble"}};
+		String[][] replacements_s3 = {{"icate", "ic"}, {"ative", ""}, {"alize", "al"}, {"iciti", "ic"}, {"ical", "ic"}, {"ful", ""}, {"ness", ""}};
+		
+		term = replace(replacements_s1a, term);
+		term = step1b(term);
+		term = step1c(term);
+		m = getVCCount(term);
+		if (m > 0) term = replace(replacements_s2, term);
+		m = getVCCount(term);
+		if (m > 0) term = replace(replacements_s3, term);
+		term = step4(term);
+		return term;
+	}
 	
 	//determine VC for stemming purposes
 	private static int getVCCount(String term) {
@@ -83,17 +93,6 @@ public class Porterstemmer {
 		return false;
 	}
 	
-	private static int lastVowel(String term) {
-		int index = 0;
-		char c, c1;
-		for (int i = 0; i < term.length(); i++) {
-			c = term.charAt(i);
-			c1 = (i > 0)? term.charAt(i-1): 'b'; //b because it would not break y
-			if (isVowel(c,c1)) index = i;
-		}
-		return index;
-	}
-	
 	private String replace(String[][] repl, String term) {
 		term = term.toLowerCase();
 		for (int i = 0; i < repl.length; i++) {
@@ -103,12 +102,6 @@ public class Porterstemmer {
 			}
 		}
 		return term;
-	}
-	
-	private String step1a(String term) {
-		term = term.toLowerCase();
-		String[][] replacements = {{"sses", "ss"},{"ies", "i"},{"ss", "ss"},{"s",""}};
-		return replace(replacements, term);
 	}
 	
 	private String step1b(String term) {
@@ -155,17 +148,17 @@ public class Porterstemmer {
 		return term;
 	}
 	
-	private String step2(String term) {
+	private String step4(String term) {
+		String[][] repl = {{"al", "0"}, {"ance", "0"}, {"ence", "0"}, {"er", "0"}, {"ic", "0"}, {"able", "0"}, {"ible", "0"}, {"ant", "0"}, {"ement", "0"}, {"ment", "0"}, {"ent", "0"}, {"ion", "1"}, {"ou", "0"}, {"ism", "0"}, {"ate", "0"}, {"iti", "0"}, {"ous", "0"}, {"ive", "0"}, {"ize", "0"}};
 		int m = getVCCount(term);
-		String[][] replacements = {{"ational", "ate"}, {"tional", "tion"}, {"enci", "ence"}, {"anci", "ance"}, {"izer", "ize"}, {"abli", "able"}, {"alli", "al"}, {"entli", "ent"}, {"eli", "e"}, {"ousli", "ous"}, {"ization", "ize"}, {"ation", "ate"}, {"ator", "ate"}, {"alism", "al"}, {"iveness", "ive"}, {"fulness", "ful"}, {"ousness", "ous"}, {"aliti", "al"}, {"iviti", "ive"}, {"biliti", "ble"},};
-		if (m > 0) return replace(replacements, term);
-		return term;
-	}
-	
-	private String step3(String term) {
-		int m = getVCCount(term);
-		String[][] replacements = {{"icate", "ic"}, {"ative", ""}, {"alize", "al"}, {"iciti", "ic"}, {"ical", "ic"}, {"ful", ""}, {"ness", ""}, };
-		if (m > 0) return replace(replacements, term);
+		for (int i = 0; i < repl.length; i++) {
+			if (term.endsWith(repl[i][0])) {
+				if (m > 1 && repl[i][1] == "0") return term.replaceFirst(repl[i][0] + "$", "");
+				else {
+					if (m > 1 && (term.endsWith("s") || term.endsWith("t"))) return term.replaceFirst(repl[i][0] + "$", "");
+				}
+			}
+		}
 		return term;
 	}
 
