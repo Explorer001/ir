@@ -6,7 +6,7 @@ public class Porterstemmer {
 
 	public static void main(String[] args) {
 		Porterstemmer ps = new Porterstemmer();
-		System.out.println(ps.stemm("filling"));
+		System.out.println(ps.stemm("filing"));
 	}
 	
 	public Porterstemmer() {}
@@ -85,7 +85,15 @@ public class Porterstemmer {
 	}
 	
 	private static boolean endsOnCVC(String term) {
-		int m = getVCCount(term);
+		if (term.length() < 2) return false;
+		else {
+			char lastm0 = term.charAt(term.length()-1);
+			char lastm1 = term.charAt(term.length()-2);
+			char lastm2 = term.charAt(term.length()-3);
+			char lastm3 = (term.length() > 3)? term.charAt(term.length()-4) : NOT_VOWEL;
+			return !isVowel(lastm2, lastm3) && isVowel(lastm1, lastm2) && !isVowel(lastm0, lastm1);
+		}
+		/*int m = getVCCount(term);
 		char start = term.charAt(0);
 		char last = term.charAt(term.length()-1);
 		char lastm1 = term.charAt(term.length()-2);
@@ -93,7 +101,7 @@ public class Porterstemmer {
 			if (last == 'w' || (last == 'x') || (last == 'y')) return false;
 			return true;
 		}
-		return false;
+		return false;*/
 	}
 	
 	private String replace(String[][] repl, String term, int condition) {
