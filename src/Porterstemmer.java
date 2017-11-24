@@ -5,8 +5,17 @@ public class Porterstemmer {
 	static char NOT_VOWEL = 'b';
 
 	public static void main(String[] args) {
+		String test = "Do you really think it is weakness that yields to temptation I tell you that there are terrible temptations which it requires strength strength and courage to yield to Oscar Wilde";
+		String wanted = "Do you really think it is weak that yield to temptat I tell you that there ar terribl temptat which it requir strength strength and courag to yield to Oscar Wild";
+		wanted = wanted.toLowerCase();
+		String[] ar = test.split(" ");
+		String[] war = wanted.split(" ");
 		Porterstemmer ps = new Porterstemmer();
-		System.out.println(ps.stemm("filing"));
+		String re;
+		for (int i = 0; i < ar.length; i++) {
+			re = ps.stemm(ar[i]);
+			System.out.println(re);
+		}
 	}
 	
 	public Porterstemmer() {}
@@ -16,6 +25,7 @@ public class Porterstemmer {
 		String[][] replacements_s2 = {{"ational", "ate"}, {"tional", "tion"}, {"enci", "ence"}, {"anci", "ance"}, {"izer", "ize"}, {"abli", "able"}, {"alli", "al"}, {"entli", "ent"}, {"eli", "e"}, {"ousli", "ous"}, {"ization", "ize"}, {"ation", "ate"}, {"ator", "ate"}, {"alism", "al"}, {"iveness", "ive"}, {"fulness", "ful"}, {"ousness", "ous"}, {"aliti", "al"}, {"iviti", "ive"}, {"biliti", "ble"}};
 		String[][] replacements_s3 = {{"icate", "ic"}, {"ative", ""}, {"alize", "al"}, {"iciti", "ic"}, {"ical", "ic"}, {"ful", ""}, {"ness", ""}};
 		
+		term = term.toLowerCase();
 		term = replace(replacements_s1a, term, -1);
 		term = step1b(term);
 		term = step1c(term);
@@ -29,7 +39,6 @@ public class Porterstemmer {
 	
 	//determine VC for stemming purposes
 	private static int getVCCount(String term) {
-		term = term.toLowerCase();
 		int vccount = 0; //how many VS's in term
 		boolean got_vowel = false;
 		char c, c1; //char and predecessor
@@ -80,12 +89,11 @@ public class Porterstemmer {
 	}
 	
 	private static boolean endsOnDouble(String term) {
-		term = term.toLowerCase();
 		return (term.charAt(term.length() - 1) == term.charAt(term.length() - 2));
 	}
 	
 	private static boolean endsOnCVC(String term) {
-		if (term.length() < 2) return false;
+		if (term.length() <= 2) return false;
 		else {
 			char lastm0 = term.charAt(term.length()-1);
 			char lastm1 = term.charAt(term.length()-2);
@@ -105,13 +113,12 @@ public class Porterstemmer {
 	}
 	
 	private String replace(String[][] repl, String term, int condition) {
-		term = term.toLowerCase();
 		String stem;
 		for (int i = 0; i < repl.length; i++) {
 			if (term.endsWith(repl[i][0])) {
 				//regex match end of line
-				stem = term.replaceFirst(repl[i][0] + "$", repl[i][1]);
-				if(getVCCount(stem) > condition) return stem;
+				stem = term.replaceFirst(repl[i][0] + "$", "");
+				if(getVCCount(stem) > condition) return term.replaceFirst(repl[i][0], repl[i][1]);
 			}
 		}
 		return term;
@@ -119,11 +126,10 @@ public class Porterstemmer {
 	
 	private String step1b(String term) {
 		boolean twoOrThree = false;
-		term = term.toLowerCase();
 		int m = getVCCount(term);
 		String stem;
 		if (term.endsWith("eed")) {
-			stem = term.replaceFirst("eed$", "ee");
+			stem = term.replaceFirst("eed$", "");
 			if (getVCCount(stem) > 0) {
 				term = stem;
 				m = getVCCount(term);
@@ -157,7 +163,6 @@ public class Porterstemmer {
 			}
 			if ((m == 1) && endsOnCVC(term)) {
 				term += "e";
-				m = getVCCount(term);
 			}
 		}
 		return term;
