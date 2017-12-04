@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -12,6 +12,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -26,7 +27,7 @@ public class Indexer {
 
       //create the indexer
       writer = new IndexWriter(indexDirectory, 
-    		  new IndexWriterConfig(new StandardAnalyzer()) );
+    		  new IndexWriterConfig(new EnglishAnalyzer()).setOpenMode(OpenMode.CREATE));//StandardAnalyzer()) );
    }
 
    public void close() throws CorruptIndexException, IOException {
@@ -61,6 +62,7 @@ public class Indexer {
    public int createIndex(String dataDirPath, FileFilter filter) 
       throws IOException {
       //get all files in the data directory
+	  System.out.println(dataDirPath);
       File[] files = new File(dataDirPath).listFiles();
 
       for (File file : files) {

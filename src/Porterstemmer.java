@@ -1,5 +1,3 @@
-package ir.stemmer;
-
 public class Porterstemmer {
 	
 	static char NOT_VOWEL = 'b';

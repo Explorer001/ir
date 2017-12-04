@@ -13,11 +13,11 @@ import org.apache.lucene.store.FSDirectory;
 
 public class Example {
 	
-   String indexDir = "C:\\Users\\dmitr\\eclipse-workspace\\Lucene\\Index";
-   String dataDir = "C:\\Users\\dmitr\\eclipse-workspace\\Lucene\\Data";
+   String indexDir = "/data/code/ir_workspace/Informationretrieval/Index";
+   String dataDir = "/data/code/ir_workspace/Informationretrieval/Data";
    Indexer indexer;
    Searcher searcher;
-
+   boolean bm25 = false;
 
    public static void main(String[] args) {
       Example tester;
@@ -44,7 +44,7 @@ public class Example {
    }
 
    private void search(String searchQuery) throws IOException, ParseException {
-      searcher = new Searcher(indexDir);
+      searcher = new Searcher(indexDir, bm25);
       long startTime = System.currentTimeMillis();
       TopDocs hits = searcher.search(searchQuery);
       long endTime = System.currentTimeMillis();
@@ -52,9 +52,10 @@ public class Example {
       System.out.println(hits.totalHits +
          " documents found. Time :" + (endTime - startTime));
       for(ScoreDoc scoreDoc : hits.scoreDocs) {
+    	 float score = scoreDoc.score;
          Document doc = searcher.getDocument(scoreDoc);
             System.out.println("File: "
-            + doc.get(LuceneConstants.FILE_PATH));
+            + doc.get(LuceneConstants.FILE_PATH) + " " + score);   
       }
       searcher.close(indexDir);
       //for(ScoreDoc scoreDoc : hits.scoreDocs) 
@@ -65,9 +66,9 @@ public class Example {
       //IndexReader rdr = DirectoryReader.open(index);
       
       // TODO: An input from the console
-      // TODO: Change the Analyzer for EnglishAnalyzer for PorterStemmer
-      // TODO: Ranking model? 
-      // TODO: Output the value of probability with ranking and content!
+      // TODO: Output the content!
       // TODO: Does it parse the title?
+      // TODO: Separate the body and title? 
+      // TODO: search all subfolders
    }
 }
