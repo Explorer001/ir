@@ -13,8 +13,8 @@ import org.apache.lucene.store.FSDirectory;
 
 public class Example {
 	
-   String indexDir = "/data/code/ir_workspace/Informationretrieval/Index";
-   String dataDir = "/data/code/ir_workspace/Informationretrieval/Data";
+   String indexDir = "/Index";
+   String dataDir = "/Data";
    Indexer indexer;
    Searcher searcher;
    boolean bm25 = false;
@@ -69,6 +69,6 @@ public class Example {
       // TODO: Output the content!
       // TODO: Does it parse the title?
       // TODO: Separate the body and title? 
-      // TODO: search all subfolders
+
    }
 }

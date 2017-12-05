@@ -74,7 +74,12 @@ public class Indexer {
          ){
             indexFile(file);
          }
-      }
+         if(file.isDirectory())
+         {
+        	 createIndex(file.getAbsolutePath(), new TextFileFilter());
+         }
+       }
+      
       return writer.numDocs();
    }
 }

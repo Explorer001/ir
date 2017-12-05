@@ -23,6 +23,7 @@ public class HTMLParser{
             	try {
                     htmlFile = Jsoup.parse(new File(file.getName()), "ISO-8859-1");
                     PrintWriter out = new PrintWriter( file.getName() + ".txt ");
+                    out.println( htmlFile.title() + "\n");
                     out.println( htmlFile.body().text() );
                     
                 } catch (IOException e) {

@@ -7,7 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
   
 //class to convert HTML to String
-public class HTMLParser{
+public class Parse{
   
     public static void main(String args[]) {
   //HTML from local path
