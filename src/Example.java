@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -48,15 +50,29 @@ public class Example {
       long startTime = System.currentTimeMillis();
       TopDocs hits = searcher.search(searchQuery);
       long endTime = System.currentTimeMillis();
-   
+      float[] scoring= new float[10];
+      String[] ranking= new String[10];
       System.out.println(hits.totalHits +
          " documents found. Time :" + (endTime - startTime));
       for(ScoreDoc scoreDoc : hits.scoreDocs) {
     	 float score = scoreDoc.score;
+         for (int i=0;i<10;i++){
+        	 if(score>scoring[i]){
+        		 for (int j=i;j<9;j++){
+        			 scoring[j+1]=scoring[j];
+            		 ranking[i+1]=ranking[j];
+        		 }
+        		 scoring[i]=score;
+        		 Document doc=searcher.getDocument(scoreDoc);
+        		 ranking[i]=doc.get(LuceneConstants.FILE_NAME);
+        		 break;
+        	 }
+         }
          Document doc = searcher.getDocument(scoreDoc);
             System.out.println("File: "
-            + doc.get(LuceneConstants.FILE_PATH) + " " + score);   
+            + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
+      System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);
       //for(ScoreDoc scoreDoc : hits.scoreDocs) 
    
