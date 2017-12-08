@@ -101,5 +101,8 @@ public class Example {
       //indexReader.close();
       //Directory index = FSDirectory.open(Paths.get(indexDir));
       //IndexReader rdr = DirectoryReader.open(index);
+      //TODO: Highlighting
+      //TODO: Print path to file
+      //TODO: Print top documents up to 10
    }
 }
