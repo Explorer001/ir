@@ -29,16 +29,20 @@ public class Example {
     	  dataDir = args[0];
     	  indexDir = args[1];
     	  if (args[2].toLowerCase().equals("ok")) {
+    		  System.out.println("Using OK");
     		  bm25 = true;
     	  } else {
+    		  System.out.println("Using VS");
     		  bm25 = false;
     	  }
     	  query = args[3];
       }
       
       try {
+    	 System.out.println("----------------Indexing-----------------");
          tester = new Example();
          tester.createIndex();
+         System.out.println("----------------Searching----------------");
          tester.search(query);
       } catch (IOException e) {
          e.printStackTrace();
@@ -113,7 +117,5 @@ public class Example {
       //indexReader.close();
       //Directory index = FSDirectory.open(Paths.get(indexDir));
       //IndexReader rdr = DirectoryReader.open(index);
-      
-      // TODO: An input from the console
    }
 }
