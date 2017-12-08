@@ -13,21 +13,31 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.BasicModelIn;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.TFIDFSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 
 public class Indexer {
 
+   private IndexWriterConfig config;
    private IndexWriter writer;
-   private HTMLParser html_parser;
 
-   public Indexer(String indexDirectoryPath) throws IOException {
+   public Indexer(String indexDirectoryPath, boolean bm25) throws IOException {
 	  Directory indexDirectory= FSDirectory.open(Paths.get(indexDirectoryPath));
-    
-
+	  
+	  config = new IndexWriterConfig(new EnglishAnalyzer());
+	  config.setOpenMode(OpenMode.CREATE);
+	  if (bm25) config.setSimilarity(new BM25Similarity());
+	  else config.setSimilarity(new ClassicSimilarity());
+	  System.out.println(config.getSimilarity().toString());
       //create the indexer
       writer = new IndexWriter(indexDirectory, 
-    		  new IndexWriterConfig(new EnglishAnalyzer()).setOpenMode(OpenMode.CREATE));//StandardAnalyzer()) );
+    		  config);
    }
 
    public void close() throws CorruptIndexException, IOException {
@@ -63,7 +73,6 @@ public class Indexer {
       throws IOException {
       //get all files in the data directory
 	  //System.out.println(dataDirPath);
-	   html_parser = new HTMLParser();
       File[] files = new File(dataDirPath).listFiles();
       
       int num_docs = 0;
@@ -75,13 +84,12 @@ public class Indexer {
             && file.canRead()
             && filter.accept(file)
          ){
-        	System.out.println(file.toString());
-        	html_parser.parse(file, dataDirPath);
-            indexFile(new File(file.getPath().replaceFirst(".html$", ".txt")));
+        	//System.out.println(file.toString());
+            indexFile(file);
          }
          if(file.isDirectory())
          {
-        	 num_docs = createIndex(file.getAbsolutePath(), new TextFileFilter());
+        	 num_docs += createIndex(file.getAbsolutePath(), filter);
          }
        }
       

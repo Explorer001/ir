@@ -14,7 +14,7 @@ public class Example {
 	
    static String indexDir = "Index";
    static String dataDir = "Data";
-   static String query = "foo";
+   static String in_query;
    Indexer indexer;
    Searcher searcher;
    static boolean bm25;
@@ -35,7 +35,7 @@ public class Example {
     		  System.out.println("Using VS");
     		  bm25 = false;
     	  }
-    	  query = args[3];
+    	  in_query = args[3];
       }
       
       try {
@@ -43,7 +43,7 @@ public class Example {
          tester = new Example();
          tester.createIndex();
          System.out.println("----------------Searching----------------");
-         tester.search(query);
+         tester.search(in_query);
       } catch (IOException e) {
          e.printStackTrace();
       } catch (ParseException e) {
@@ -52,7 +52,7 @@ public class Example {
    }
 
    private void createIndex() throws IOException {
-      indexer = new Indexer(indexDir);
+      indexer = new Indexer(indexDir, bm25);
       int numIndexed;
       long startTime = System.currentTimeMillis();	
       numIndexed = indexer.createIndex(dataDir, new TextFileFilter());
@@ -63,6 +63,7 @@ public class Example {
    }
 
    private void search(String searchQuery) throws IOException, ParseException {
+	  System.out.println(bm25);
       searcher = new Searcher(indexDir, bm25);
       long startTime = System.currentTimeMillis();
       TopDocs hits = searcher.search(searchQuery);
@@ -89,25 +90,8 @@ public class Example {
             System.out.println("File: "
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
-      InputStream fis;
-      InputStreamReader isr;
-      BufferedReader br = null;
-      int count;
-      String line;
       for (int i = 0; i < ranking.length; i++) {
-    	  count = 0;
-    	  if (ranking[i] != null) {
-	    	  fis = new FileInputStream(dataDir + "/" + ranking[i]);
-	    	  isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
-	    	  br = new BufferedReader(isr);
-	    	  }
     	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]));
-    	  if (ranking[i] != null) {
-    	  	  while (count < 3 && (line = br.readLine()) != null) {
-    	  		  count += 1;
-	    		  System.out.println("+ " + line);
-	    	  }
-    	  }
       }
       //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);

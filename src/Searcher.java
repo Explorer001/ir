@@ -13,12 +13,11 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 public class Searcher {
-	
-	boolean bm25 = false;
 	
    IndexSearcher indexSearcher;
    QueryParser queryParser;
@@ -30,6 +29,7 @@ public class Searcher {
       IndexReader indexDirectory = DirectoryReader.open(index);
       indexSearcher = new IndexSearcher(indexDirectory);
       if (bm25) indexSearcher.setSimilarity(new BM25Similarity());
+      else indexSearcher.setSimilarity(new ClassicSimilarity());
       queryParser = new QueryParser(LuceneConstants.CONTENTS,
          new EnglishAnalyzer());
    }
