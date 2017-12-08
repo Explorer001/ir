@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
   
 //class to convert HTML to String
 public class HTMLParser{

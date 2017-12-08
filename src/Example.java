@@ -1,32 +1,45 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
 public class Example {
 	
-   String indexDir = "Index";
-   String dataDir = "Data";
+   static String indexDir = "Index";
+   static String dataDir = "Data";
+   static String query = "foo";
    Indexer indexer;
    Searcher searcher;
-   boolean bm25 = false;
+   static boolean bm25;
 
    public static void main(String[] args) {
       Example tester;
+      
+      if (args.length < 4 || args.length > 4) {
+    	  System.out.println("Usage: java -jar IR_P01.jar [Path/to/document/folder] [Path/to/index/folder] [VS/OK] <query>");
+    	  return;
+      } else {
+    	  dataDir = args[0];
+    	  indexDir = args[1];
+    	  if (args[2].toLowerCase().equals("ok")) {
+    		  bm25 = true;
+    	  } else {
+    		  bm25 = false;
+    	  }
+    	  query = args[3];
+      }
+      
       try {
          tester = new Example();
          tester.createIndex();
-         tester.search("LuceneFirstApplication");
+         tester.search(query);
       } catch (IOException e) {
          e.printStackTrace();
       } catch (ParseException e) {
@@ -72,9 +85,25 @@ public class Example {
             System.out.println("File: "
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
+      InputStream fis;
+      InputStreamReader isr;
+      BufferedReader br = null;
+      int count;
+      String line;
       for (int i = 0; i < ranking.length; i++) {
+    	  count = 0;
+    	  if (ranking[i] != null) {
+	    	  fis = new FileInputStream(dataDir + "/" + ranking[i]);
+	    	  isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+	    	  br = new BufferedReader(isr);
+	    	  }
     	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]));
-    	  System.out.println("+ Place summary here");
+    	  if (ranking[i] != null) {
+    	  	  while (count < 3 && (line = br.readLine()) != null) {
+    	  		  count += 1;
+	    		  System.out.println("+ " + line);
+	    	  }
+    	  }
       }
       //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);
@@ -86,6 +115,5 @@ public class Example {
       //IndexReader rdr = DirectoryReader.open(index);
       
       // TODO: An input from the console
-      // TODO: Output the content
    }
 }
