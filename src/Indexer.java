@@ -20,6 +20,7 @@ import org.apache.lucene.util.Version;
 public class Indexer {
 
    private IndexWriter writer;
+   private HTMLParser html_parser;
 
    public Indexer(String indexDirectoryPath) throws IOException {
 	  Directory indexDirectory= FSDirectory.open(Paths.get(indexDirectoryPath));
@@ -62,8 +63,11 @@ public class Indexer {
    public int createIndex(String dataDirPath, FileFilter filter) 
       throws IOException {
       //get all files in the data directory
-	  System.out.println(dataDirPath);
+	  //System.out.println(dataDirPath);
+	   html_parser = new HTMLParser();
       File[] files = new File(dataDirPath).listFiles();
+      
+      int num_docs = 0;
 
       for (File file : files) {
          if(!file.isDirectory()
@@ -72,14 +76,16 @@ public class Indexer {
             && file.canRead()
             && filter.accept(file)
          ){
-            indexFile(file);
+        	System.out.println(file.toString());
+        	html_parser.parse(file, dataDirPath);
+            indexFile(new File(file.getPath().replaceFirst(".html$", ".txt")));
          }
          if(file.isDirectory())
          {
-        	 createIndex(file.getAbsolutePath(), new TextFileFilter());
+        	 num_docs = createIndex(file.getAbsolutePath(), new TextFileFilter());
          }
        }
       
-      return writer.numDocs();
+      return num_docs + writer.numDocs();
    }
 }

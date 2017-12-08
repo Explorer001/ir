@@ -15,8 +15,8 @@ import org.apache.lucene.store.FSDirectory;
 
 public class Example {
 	
-   String indexDir = "/Index";
-   String dataDir = "/Data";
+   String indexDir = "Index";
+   String dataDir = "Data";
    Indexer indexer;
    Searcher searcher;
    boolean bm25 = false;
@@ -72,7 +72,11 @@ public class Example {
             System.out.println("File: "
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
-      System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
+      for (int i = 0; i < ranking.length; i++) {
+    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]));
+    	  System.out.println("+ Place summary here");
+      }
+      //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);
       //for(ScoreDoc scoreDoc : hits.scoreDocs) 
    
@@ -82,9 +86,6 @@ public class Example {
       //IndexReader rdr = DirectoryReader.open(index);
       
       // TODO: An input from the console
-      // TODO: Output the content!
-      // TODO: Does it parse the title?
-      // TODO: Separate the body and title? 
-
+      // TODO: Output the content
    }
 }
