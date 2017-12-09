@@ -70,6 +70,7 @@ public class Example {
       long endTime = System.currentTimeMillis();
       float[] scoring= new float[10];
       String[] ranking= new String[10];
+      String[] paths= new String[10];
       System.out.println(hits.totalHits +
          " documents found. Time :" + (endTime - startTime));
       for(ScoreDoc scoreDoc : hits.scoreDocs) {
@@ -78,11 +79,13 @@ public class Example {
         	 if(score>scoring[i]){
         		 for (int j=i;j<9;j++){
         			 scoring[j+1]=scoring[j];
-            		 ranking[i+1]=ranking[j];
+            		 ranking[j+1]=ranking[j];
+            		 paths[j+1]=paths[j];
         		 }
         		 scoring[i]=score;
         		 Document doc=searcher.getDocument(scoreDoc);
         		 ranking[i]=doc.get(LuceneConstants.FILE_NAME);
+        		 paths[i]=doc.get(LuceneConstants.FILE_PATH);
         		 break;
         	 }
          }
@@ -91,7 +94,7 @@ public class Example {
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
       for (int i = 0; i < ranking.length; i++) {
-    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]));
+    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i]);
       }
       //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);
@@ -102,7 +105,6 @@ public class Example {
       //Directory index = FSDirectory.open(Paths.get(indexDir));
       //IndexReader rdr = DirectoryReader.open(index);
       //TODO: Highlighting
-      //TODO: Print path to file
-      //TODO: Print top documents up to 10
+
    }
 }
