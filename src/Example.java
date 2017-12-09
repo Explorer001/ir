@@ -71,6 +71,7 @@ public class Example {
       float[] scoring= new float[10];
       String[] ranking= new String[10];
       String[] paths= new String[10];
+      
       System.out.println(hits.totalHits +
          " documents found. Time :" + (endTime - startTime));
       for(ScoreDoc scoreDoc : hits.scoreDocs) {
@@ -94,7 +95,7 @@ public class Example {
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
       for (int i = 0; i < ranking.length; i++) {
-    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i]);
+    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i] + "|");
       }
       //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
       searcher.close(indexDir);
@@ -104,7 +105,7 @@ public class Example {
       //indexReader.close();
       //Directory index = FSDirectory.open(Paths.get(indexDir));
       //IndexReader rdr = DirectoryReader.open(index);
-      //TODO: Highlighting
+
 
    }
 }

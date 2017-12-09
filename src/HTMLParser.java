@@ -10,7 +10,7 @@ public class HTMLParser{
   
 	public HTMLParser() {};
 	
-    public void parse(File file, String dataDir) {
+    public File parse(File file, String dataDir) {
   //HTML from local path
     	System.out.println("parsing: " + file.getName());
         Document htmlFile = null;
@@ -24,16 +24,20 @@ public class HTMLParser{
             if (file.getName().endsWith(".html")) {*/
             	try {
                     htmlFile = Jsoup.parse(file, "ISO-8859-1");
-                    //System.out.println(htmlFile.body().text());
-                    PrintWriter out = new PrintWriter(dataDir + "/" + file.getName().replaceFirst(".html$", "") + ".txt");
+                    System.out.println(htmlFile.title());
+                    System.out.println(htmlFile.body().text());
+                    PrintWriter out = new PrintWriter(file.getPath().replaceFirst(".html$", "") + ".txt");
                     out.println( htmlFile.title() + "\n");
                     out.println( htmlFile.body().text() );
-                    out.close();
+                    out.close();                    
+                    file=new File(dataDir.replaceFirst(".html$", "") + ".txt");
+                    return file;
                     
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                 	System.out.println("parsing failed");
                     e.printStackTrace();
+                    return file;
                 }
             }
         /*}

@@ -21,6 +21,7 @@ import org.apache.lucene.search.similarities.TFIDFSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
+import org.jsoup.Jsoup;
 
 public class Indexer {
 
@@ -50,8 +51,10 @@ public class Indexer {
       //index file contents
       Field contentField = new TextField(LuceneConstants.CONTENTS, new FileReader(file));
       //index file name
+      org.jsoup.nodes.Document htmlFile=null;
+      htmlFile=Jsoup.parse(file, "ISO-8859-1");      
       Field fileNameField = new StringField(LuceneConstants.FILE_NAME,
-         file.getName(),Field.Store.YES);
+         htmlFile.title(),Field.Store.YES);
       //index file path
       Field filePathField = new StringField(LuceneConstants.FILE_PATH,
          file.getCanonicalPath(),Field.Store.YES);
@@ -85,7 +88,9 @@ public class Indexer {
             && filter.accept(file)
          ){
         	//System.out.println(file.toString());
-            indexFile(file);
+        	//HTMLParser parser= new HTMLParser();
+            //indexFile(parser.parse(file, file.getCanonicalPath()));
+        	 indexFile(file);
          }
          if(file.isDirectory())
          {
