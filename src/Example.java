@@ -99,7 +99,10 @@ public class Example {
       }
       //print out the top 10 with enough information
       for (int i = 0; i < ranking.length; i++) {
-    	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i] + "|");
+    	  //printing up to 10 documents
+    	  if (ranking[i] != null) {
+    		  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i] + "|");
+    	  }
       }
       //end the process
       searcher.close(indexDir);

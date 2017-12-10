@@ -93,6 +93,7 @@ public class Indexer {
         	 
         	 indexFile(file);
          }
+         //if file is directory, recursive call createIndex on directory
          if(file.isDirectory())
          {
         	 num_docs += createIndex(file.getAbsolutePath(), filter);
