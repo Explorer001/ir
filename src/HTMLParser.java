@@ -14,14 +14,7 @@ public class HTMLParser{
   //HTML from local path
     	System.out.println("parsing: " + file.getName());
         Document htmlFile = null;
-        //File folder = new File("Data/"); //it should be a local folder(path)
-        //File[] listOfFiles = folder.listFiles();
-        
 
-        /*for (File file : listOfFiles) {
-        	file.getName().endsWith(".html");
-
-            if (file.getName().endsWith(".html")) {*/
             	try {
                     htmlFile = Jsoup.parse(file, "ISO-8859-1");
                     System.out.println(htmlFile.title());
@@ -40,6 +33,5 @@ public class HTMLParser{
                     return file;
                 }
             }
-        /*}
-    }*/
+
 }

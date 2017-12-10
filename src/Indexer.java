@@ -29,10 +29,12 @@ public class Indexer {
    private IndexWriter writer;
 
    public Indexer(String indexDirectoryPath, boolean bm25) throws IOException {
+	  //Initialize the indexer with the English language as the base
 	  Directory indexDirectory= FSDirectory.open(Paths.get(indexDirectoryPath));
 	  
 	  config = new IndexWriterConfig(new EnglishAnalyzer());
 	  config.setOpenMode(OpenMode.CREATE);
+	  //check if Vector space or Okapi should be used
 	  if (bm25) config.setSimilarity(new BM25Similarity());
 	  else config.setSimilarity(new ClassicSimilarity());
 	  System.out.println(config.getSimilarity().toString());
@@ -42,6 +44,7 @@ public class Indexer {
    }
 
    public void close() throws CorruptIndexException, IOException {
+	  //close the index writer 
       writer.close();
    }
 
@@ -67,6 +70,7 @@ public class Indexer {
    }   
 
    private void indexFile(File file) throws IOException {
+	  //index the given file 
       System.out.println("Indexing "+file.getCanonicalPath());
       Document document = getDocument(file);
       writer.addDocument(document);
@@ -75,11 +79,10 @@ public class Indexer {
    public int createIndex(String dataDirPath, FileFilter filter) 
       throws IOException {
       //get all files in the data directory
-	  //System.out.println(dataDirPath);
       File[] files = new File(dataDirPath).listFiles();
       
       int num_docs = 0;
-
+      //check if the given file is valid and if it's a directory check inside for more files
       for (File file : files) {
          if(!file.isDirectory()
             && !file.isHidden()
@@ -87,9 +90,7 @@ public class Indexer {
             && file.canRead()
             && filter.accept(file)
          ){
-        	//System.out.println(file.toString());
-        	//HTMLParser parser= new HTMLParser();
-            //indexFile(parser.parse(file, file.getCanonicalPath()));
+        	 
         	 indexFile(file);
          }
          if(file.isDirectory())

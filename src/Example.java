@@ -21,7 +21,7 @@ public class Example {
 
    public static void main(String[] args) {
       Example tester;
-      
+      //check the incoming String for the correct input and initialize the values
       if (args.length < 4 || args.length > 4) {
     	  System.out.println("Usage: java -jar IR_P01.jar [Path/to/document/folder] [Path/to/index/folder] [VS/OK] <query>");
     	  return;
@@ -37,7 +37,7 @@ public class Example {
     	  }
     	  in_query = args[3];
       }
-      
+      //index the given path and search with the given query
       try {
     	 System.out.println("----------------Indexing-----------------");
          tester = new Example();
@@ -52,6 +52,7 @@ public class Example {
    }
 
    private void createIndex() throws IOException {
+	  //call the indexer with the given values 
       indexer = new Indexer(indexDir, bm25);
       int numIndexed;
       long startTime = System.currentTimeMillis();	
@@ -63,6 +64,7 @@ public class Example {
    }
 
    private void search(String searchQuery) throws IOException, ParseException {
+	  //call the searcher with the given values 
 	  System.out.println(bm25);
       searcher = new Searcher(indexDir, bm25);
       long startTime = System.currentTimeMillis();
@@ -74,6 +76,7 @@ public class Example {
       
       System.out.println(hits.totalHits +
          " documents found. Time :" + (endTime - startTime));
+      //check the scores for each file and create a top 10 of all documents
       for(ScoreDoc scoreDoc : hits.scoreDocs) {
     	 float score = scoreDoc.score;
          for (int i=0;i<10;i++){
@@ -94,18 +97,12 @@ public class Example {
             System.out.println("File: "
             + doc.get(LuceneConstants.FILE_PATH) + " " + score );   
       }
+      //print out the top 10 with enough information
       for (int i = 0; i < ranking.length; i++) {
     	  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i] + "|");
       }
-      //System.out.println("Best 10 Documents:" + Arrays.toString(ranking));
+      //end the process
       searcher.close(indexDir);
-      //for(ScoreDoc scoreDoc : hits.scoreDocs) 
-   
-      //close associate index files and save deletions to disk
-      //indexReader.close();
-      //Directory index = FSDirectory.open(Paths.get(indexDir));
-      //IndexReader rdr = DirectoryReader.open(index);
-
 
    }
 }

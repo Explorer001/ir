@@ -1,5 +1,6 @@
 
 public class LuceneConstants {
+	//creating some Lucene constants
    public static final String CONTENTS = "contents";
    public static final String FILE_NAME = "filename";
    public static final String FILE_PATH = "filepath";

@@ -24,6 +24,7 @@ public class Searcher {
    Query query;
    
    public Searcher(String indexDirectoryPath, boolean bm25) 
+      //initialize the searcher with the indexed files and the corresponding model
       throws IOException {
 	  Directory index = FSDirectory.open(Paths.get(indexDirectoryPath));
       IndexReader indexDirectory = DirectoryReader.open(index);
@@ -35,17 +36,20 @@ public class Searcher {
    }
    
    public TopDocs search( String searchQuery) 
+      //search the files with the given query 
       throws IOException, ParseException {
       query = queryParser.parse(searchQuery);
       return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
    }
 
    public Document getDocument(ScoreDoc scoreDoc) 
+      //get the document score
       throws CorruptIndexException, IOException {
       return indexSearcher.doc(scoreDoc.doc);	
    }
 
     public void close(String path) throws IOException {
+    	//end the search
     	Directory directory = null;
     	DirectoryReader ireader = null;
     	try {
