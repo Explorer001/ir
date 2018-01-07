@@ -14,20 +14,19 @@ public class WebCrawler {
 	private List<String> URL_DEPTH_LIST;
 	private int MAX_DEPTH = 0;
 	private String INDEXDIR;
+	private Indexer indexer;
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		WebCrawler crawl = new WebCrawler("index");
-		List<String> urls = crawl.getURLS("http://www.dke-research.de", 1);
-		for(String url : urls) {
-			System.out.println(url);
-		}
+		List<String> urls = crawl.getURLS("https://www.archlinux.org/", 1);
 	}
 	
-	public WebCrawler(String indexdir) {
+	public WebCrawler(String indexdir) throws IOException {
 		this.URL_LIST = new LinkedList<>();
 		this.URL_DEPTH_LIST = new LinkedList<>();
 		this.INDEXDIR = indexdir;
+		this.indexer = new Indexer(indexdir);
 	}
 	
 	public List<String> getURLS(String seed, int max_depth) throws IOException {
@@ -43,17 +42,20 @@ public class WebCrawler {
 	
 	public void _getURLS(String seed, int depth) {
 		if (depth > this.MAX_DEPTH) return;
+		this.URL_DEPTH_LIST.add(seed.toLowerCase() + "\t" + Integer.toString(depth));
+		this.URL_LIST.add(seed);
 		try {
+			System.out.println(seed + " at depth: " + depth);
 			Connection con = Jsoup.connect(seed);
 			Document doc = con.get();
 			Elements links = doc.select("a[href]");
+			
+			indexer.indexFile(indexer.createDocument(Jsoup.parse(doc.toString()), seed));
 			
 			String url;
 			for (Element e : links) {
 				url = e.absUrl("href").replaceFirst("#.*", "");
 				if (!url.equals("") && !this.URL_LIST.contains(url)) {
-					this.URL_DEPTH_LIST.add(url.toLowerCase() + "\t" + Integer.toString(depth));
-					this.URL_LIST.add(url);
 					_getURLS(url, depth + 1);
 				}
 			}
