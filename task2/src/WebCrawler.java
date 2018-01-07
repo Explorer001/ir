@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 public class WebCrawler {
 	
 	private List<String> URL_LIST;
+	private List<String> URL_DEPTH_LIST;
 	private int MAX_DEPTH = 0;
 	private String INDEXDIR;
 	
@@ -25,6 +26,7 @@ public class WebCrawler {
 	
 	public WebCrawler(String indexdir) {
 		this.URL_LIST = new LinkedList<>();
+		this.URL_DEPTH_LIST = new LinkedList<>();
 		this.INDEXDIR = indexdir;
 	}
 	
@@ -32,7 +34,7 @@ public class WebCrawler {
 		this.MAX_DEPTH = max_depth;
 		_getURLS(seed, 0);
 		FileWriter writer = new FileWriter(this.INDEXDIR + "/pages.txt");
-		for (String url : this.URL_LIST) {
+		for (String url : this.URL_DEPTH_LIST) {
 			writer.write(url + "\n");
 		}
 		writer.close();
@@ -49,8 +51,9 @@ public class WebCrawler {
 			String url;
 			for (Element e : links) {
 				url = e.absUrl("href").replaceFirst("#.*", "");
-				if (!url.equals("") && !this.URL_LIST.contains(url + "\t" + Integer.toString(depth))) {
-					this.URL_LIST.add(url.toLowerCase() + "\t" + Integer.toString(depth));
+				if (!url.equals("") && !this.URL_LIST.contains(url)) {
+					this.URL_DEPTH_LIST.add(url.toLowerCase() + "\t" + Integer.toString(depth));
+					this.URL_LIST.add(url);
 					_getURLS(url, depth + 1);
 				}
 			}
