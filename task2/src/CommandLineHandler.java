@@ -37,6 +37,8 @@ public class CommandLineHandler {
 		      String[] ranking= new String[10];
 		      String[] paths= new String[10];
 		      
+		      System.out.println("--------------Searching---------------");
+		      
 		      System.out.println(hits.totalHits +
 		         " documents found. Time :" + (endTime - startTime));
 		      //check the scores for each file and create a top 10 of all documents
@@ -57,14 +59,12 @@ public class CommandLineHandler {
 		        	 }
 		         }
 		         Document doc = searcher.getDocument(scoreDoc);
-		            System.out.println("File: "
-		            + doc.get("filepath") + " " + score );   
 		      }
 		      //print out the top 10 with enough information
 		      for (int i = 0; i < ranking.length; i++) {
 		    	  //printing up to 10 documents
 		    	  if (ranking[i] != null) {
-		    		  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | Path: " + paths[i] + "|");
+		    		  System.out.println("|" + Integer.toString(i+1) + " " + ranking[i] + " | Score: " + Float.toString(scoring[i]) + " | URL: " + paths[i] + "|");
 		    	  }
 		      }
 		      //end the process

@@ -29,7 +29,7 @@ public class Indexer {
 	}
 	
 	public void close() throws IOException{
-		System.out.println(writer.numDocs());
+		System.out.println("Indexed " + writer.numDocs() + " Docs!");
 		writer.commit();
 		writer.close();
 	}

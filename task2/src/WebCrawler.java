@@ -16,12 +16,6 @@ public class WebCrawler {
 	private String INDEXDIR;
 	private Indexer indexer;
 	
-	/*public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		WebCrawler crawl = new WebCrawler("index");
-		crawl.getURLSandIndex("http://www.dke-research.de/", 1);
-	}*/
-	
 	public WebCrawler(String indexdir) throws IOException {
 		this.URL_LIST = new LinkedList<>();
 		this.URL_DEPTH_LIST = new LinkedList<>();
@@ -31,6 +25,7 @@ public class WebCrawler {
 	
 	public void getURLSandIndex(String seed, int max_depth) throws IOException {
 		this.MAX_DEPTH = max_depth;
+		System.out.println("--------------Indexing---------------");
 		_getURLS(seed, 0);
 		FileWriter writer = new FileWriter(this.INDEXDIR + "/pages.txt");
 		for (String url : this.URL_DEPTH_LIST) {
