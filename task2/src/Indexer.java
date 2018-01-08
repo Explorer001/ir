@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -10,11 +9,9 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.jsoup.Jsoup;
 
 public class Indexer {
 	
@@ -32,23 +29,31 @@ public class Indexer {
 	}
 	
 	public void close() throws IOException{
+		System.out.println(writer.numDocs());
+		writer.commit();
 		writer.close();
 	}
 	
 	public Document createDocument(org.jsoup.nodes.Document jdoc, String url) {
 		Document newDoc =  new Document();
+		
+		try {
 		 
-	    Field fileNameField = new StringField("filename",
-	         jdoc.title(),Field.Store.YES);
-	    
-	    Field contentField = new TextField("contents",
-		         jdoc.body().toString(),Field.Store.YES);
-	    
-	    Field linkField = new StringField("link", url, Field.Store.YES);
-	    
-	    newDoc.add(linkField);
-	    newDoc.add(fileNameField);
-	    newDoc.add(contentField);
+		    Field fileNameField = new StringField("filename",
+		         jdoc.title(),Field.Store.YES);
+		    
+		    Field contentField = new TextField("contents",
+			         jdoc.body().toString(), Field.Store.YES);
+		    
+		    Field linkField = new StringField("filepath", url, Field.Store.YES);
+		    
+		    newDoc.add(linkField);
+		    newDoc.add(fileNameField);
+		    newDoc.add(contentField);
+		   
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	     
 	    //System.out.println(newDoc.getField("link"));
 	    

@@ -16,11 +16,11 @@ public class WebCrawler {
 	private String INDEXDIR;
 	private Indexer indexer;
 	
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		WebCrawler crawl = new WebCrawler("index");
-		List<String> urls = crawl.getURLS("https://www.archlinux.org/", 1);
-	}
+		crawl.getURLSandIndex("http://www.dke-research.de/", 1);
+	}*/
 	
 	public WebCrawler(String indexdir) throws IOException {
 		this.URL_LIST = new LinkedList<>();
@@ -29,7 +29,7 @@ public class WebCrawler {
 		this.indexer = new Indexer(indexdir);
 	}
 	
-	public List<String> getURLS(String seed, int max_depth) throws IOException {
+	public void getURLSandIndex(String seed, int max_depth) throws IOException {
 		this.MAX_DEPTH = max_depth;
 		_getURLS(seed, 0);
 		FileWriter writer = new FileWriter(this.INDEXDIR + "/pages.txt");
@@ -37,7 +37,7 @@ public class WebCrawler {
 			writer.write(url + "\n");
 		}
 		writer.close();
-		return URL_LIST;
+		indexer.close();
 	}
 	
 	public void _getURLS(String seed, int depth) {
