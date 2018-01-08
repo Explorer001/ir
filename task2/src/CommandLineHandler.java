@@ -11,6 +11,7 @@ public class CommandLineHandler {
 	private static Searcher searcher;
 	
 	public static void main(String[] args) throws IOException, ParseException {
+		//check the incoming String for the correct input and initialize the values
 		if (args.length != 4) {
 			System.out.println("Usage: java -jar IRP02.jar [seed URL] [crawl depth] [path to index folder] [query]");
 			return;

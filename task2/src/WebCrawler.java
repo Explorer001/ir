@@ -17,6 +17,7 @@ public class WebCrawler {
 	private Indexer indexer;
 	
 	public WebCrawler(String indexdir) throws IOException {
+		// initialize the values
 		this.URL_LIST = new LinkedList<>();
 		this.URL_DEPTH_LIST = new LinkedList<>();
 		this.INDEXDIR = indexdir;
@@ -24,6 +25,7 @@ public class WebCrawler {
 	}
 	
 	public void getURLSandIndex(String seed, int max_depth) throws IOException {
+		// get all the URL's with _getURLS and index them
 		this.MAX_DEPTH = max_depth;
 		System.out.println("--------------Indexing---------------");
 		_getURLS(seed, 0);
@@ -36,6 +38,7 @@ public class WebCrawler {
 	}
 	
 	public void _getURLS(String seed, int depth) {
+		// is going through all URL's until the max depth has been accomplished and adds them to the URL list as well as index them
 		if (depth > this.MAX_DEPTH) return;
 		this.URL_DEPTH_LIST.add(seed.toLowerCase() + "\t" + Integer.toString(depth));
 		this.URL_LIST.add(seed);
