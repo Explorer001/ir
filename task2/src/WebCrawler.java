@@ -18,8 +18,10 @@ public class WebCrawler {
 	
 	public WebCrawler(String indexdir) throws IOException {
 		// initialize the values
+    // list to write in pages txt and list to check if url was seen at some place
 		this.URL_LIST = new LinkedList<>();
 		this.URL_DEPTH_LIST = new LinkedList<>();
+    //directory where index should be stored
 		this.INDEXDIR = indexdir;
 		this.indexer = new Indexer(indexdir);
 	}
@@ -28,7 +30,9 @@ public class WebCrawler {
 		// get all the URL's with _getURLS and index them
 		this.MAX_DEPTH = max_depth;
 		System.out.println("--------------Indexing---------------");
+    //crawling method
 		_getURLS(seed, 0);
+    //write results in inn pages txt
 		FileWriter writer = new FileWriter(this.INDEXDIR + "/pages.txt");
 		for (String url : this.URL_DEPTH_LIST) {
 			writer.write(url + "\n");
@@ -40,25 +44,30 @@ public class WebCrawler {
 	public void _getURLS(String seed, int depth) {
 		// is going through all URL's until the max depth has been accomplished and adds them to the URL list as well as index them
 		if (depth > this.MAX_DEPTH) return;
+    //add normalized url to list for pages.txt
 		this.URL_DEPTH_LIST.add(seed.toLowerCase() + "\t" + Integer.toString(depth));
+    //list of seen urls
 		this.URL_LIST.add(seed);
 		try {
+      //connect to seed and filter for links (a[href])
 			System.out.println(seed + " at depth: " + depth);
 			Connection con = Jsoup.connect(seed);
 			Document doc = con.get();
 			Elements links = doc.select("a[href]");
 			
+      //index page
 			indexer.indexFile(indexer.createDocument(Jsoup.parse(doc.toString()), seed));
 			
 			String url;
+      //recursively call all linked websites if not seen or empty
 			for (Element e : links) {
 				url = e.absUrl("href").replaceFirst("#.*", "");
 				if (!url.equals("") && !this.URL_LIST.contains(url)) {
 					_getURLS(url, depth + 1);
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+		  //if things go wrong
 		}
 	}
 

@@ -16,11 +16,13 @@ public class CommandLineHandler {
 			System.out.println("Usage: java -jar IRP02.jar [seed URL] [crawl depth] [path to index folder] [query]");
 			return;
 		} else {
+      //select arguments from string
 			String indexdir = args[2];
 			int searchdepth = Integer.parseInt(args[1]);
 			String seed = args[0];
 			String query = args[3];
 					
+      //crawl the website to specific depth and index while crawling
 			crawl = new WebCrawler(indexdir);
 			crawl.getURLSandIndex(seed, searchdepth);
 			

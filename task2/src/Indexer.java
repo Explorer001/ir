@@ -29,6 +29,7 @@ public class Indexer {
 	}
 	
 	public void close() throws IOException{
+    //close index files and commit changes
 		System.out.println("Indexed " + writer.numDocs() + " Docs!");
 		writer.commit();
 		writer.close();
@@ -36,15 +37,17 @@ public class Indexer {
 	
 	public Document createDocument(org.jsoup.nodes.Document jdoc, String url) {
 		Document newDoc =  new Document();
-		
+		//transform jsoup doc to lucene doc
 		try {
-		 
+		    //at website title
 		    Field fileNameField = new StringField("filename",
 		         jdoc.title(),Field.Store.YES);
 		    
+        //add body of website
 		    Field contentField = new TextField("contents",
 			         jdoc.body().toString(), Field.Store.YES);
 		    
+        //add url of website
 		    Field linkField = new StringField("filepath", url, Field.Store.YES);
 		    
 		    newDoc.add(linkField);
@@ -52,16 +55,15 @@ public class Indexer {
 		    newDoc.add(contentField);
 		   
 		} catch (Exception e) {
-			e.printStackTrace();
+	      //if no document exists
 		}
-	     
-	    //System.out.println(newDoc.getField("link"));
 	    
 	    return newDoc;
 	}
 	
 	public void indexFile(Document doc) throws IOException {
-		writer.addDocument(doc);
+		//simple lucene indexing
+    writer.addDocument(doc);
 	}
 	
 }
