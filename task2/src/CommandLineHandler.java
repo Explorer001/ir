@@ -16,13 +16,20 @@ public class CommandLineHandler {
 			System.out.println("Usage: java -jar IRP02.jar [seed URL] [crawl depth] [path to index folder] [query]");
 			return;
 		} else {
-      //select arguments from string
+			//select arguments from string
 			String indexdir = args[2];
 			int searchdepth = Integer.parseInt(args[1]);
 			String seed = args[0];
 			String query = args[3];
+			
+			if (!seed.matches("^.*://[^/]*/.*")) {
+				System.out.println("Malformed URL");
+				System.out.println("Use URL of format: http://www.example.com/");
+				System.out.println("Aborting");
+				return;
+			}
 					
-      //crawl the website to specific depth and index while crawling
+			//crawl the website to specific depth and index while crawling
 			crawl = new WebCrawler(indexdir);
 			crawl.getURLSandIndex(seed, searchdepth);
 			

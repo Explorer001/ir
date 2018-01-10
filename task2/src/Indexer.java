@@ -43,11 +43,11 @@ public class Indexer {
 		    Field fileNameField = new StringField("filename",
 		         jdoc.title(),Field.Store.YES);
 		    
-        //add body of website
+		    //add body of website
 		    Field contentField = new TextField("contents",
-			         jdoc.body().toString(), Field.Store.YES);
+			         jdoc.body().text(), Field.Store.YES);
 		    
-        //add url of website
+		    //add url of website
 		    Field linkField = new StringField("filepath", url, Field.Store.YES);
 		    
 		    newDoc.add(linkField);
