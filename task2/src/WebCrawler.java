@@ -46,17 +46,19 @@ public class WebCrawler {
 	public void _getURLS(String seed, int depth) {
 		// is going through all URL's until the max depth has been accomplished and adds them to the URL list as well as index them
 		if (depth > this.MAX_DEPTH) return;
-		//add normalized url to list for pages.txt
-		this.URL_DEPTH_LIST.add(seed.toLowerCase() + "\t" + Integer.toString(depth));
-		//list of seen urls
-		this.URL_LIST.add(seed);
 		try {
 			//connect to seed and filter for links (a[href])
 			System.out.println(seed + " at depth: " + depth);
+			//add url to list of seen
+			this.URL_LIST.add(seed);
 			if (!R_HANDLER.allowed(seed)) {
 				System.out.println("Acces to: " + seed + " disallowed!");
+				//add normalized url to list for pages.txt with keyword disallowed
+				this.URL_DEPTH_LIST.add("Disallowed: " + seed.toLowerCase() + "\t" + Integer.toString(depth));
 				return;
 			}
+			//add normalized url to list for pages.txt
+			this.URL_DEPTH_LIST.add(seed.toLowerCase() + "\t" + Integer.toString(depth));
 			Connection con = Jsoup.connect(seed);
 			Document doc = con.get();
 			Elements links = doc.select("a[href]");
