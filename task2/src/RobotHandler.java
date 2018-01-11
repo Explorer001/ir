@@ -31,7 +31,6 @@ public class RobotHandler {
 	}
 	
 	private List<String> get_robot_txt(String seed) {
-		System.out.println("Getting Robots.txt");
 		//regex to match host part of url
 		Pattern p = Pattern.compile("^.*://[^/]*");
 		Matcher m = p.matcher(seed);
@@ -43,10 +42,11 @@ public class RobotHandler {
 		this.HOST_URL = host_url;
 		//check if url is in cache
 		if (CHACHE.containsKey(host_url)) {
-			System.out.println("Using cache");
+			System.out.println("Using cached robot.txt");
 			return this.CHACHE.get(host_url);
 		}
 		try {
+			System.out.println("Getting Robots.txt");
 			//variable idicates if user agent is *
 			boolean relevant = false;
 			
