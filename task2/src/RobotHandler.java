@@ -61,7 +61,9 @@ public class RobotHandler {
 			while ((line = in.readLine()) != null) {
 				if (relevant && line.contains("Disallow")) {
 					//add in some regex symbols for better matching
-					disallow.add(line.replaceAll(".*: ", "").replace("*", ".*").replace("?", "\\?").replace("+","\\+") + ".*");
+					line = line.replaceAll(".*: ", "");
+					if (!line.matches("^/.*")) line = "/" + line;
+					disallow.add(line.replace("*", ".*").replace("?", "\\?").replace("+","\\+") + ".*");
 				}
 				//check if user agent is *
 				if (line.matches("User-[Aa]gent.*")) {
