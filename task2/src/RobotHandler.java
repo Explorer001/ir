@@ -24,8 +24,6 @@ public class RobotHandler {
 		List<String> disallowed = this.get_robot_txt(seed);
 		for (String s : disallowed) {
 			if (seed.matches(HOST_URL + s)) {
-				System.out.println();
-				System.out.println(HOST_URL + s);
 				return false;
 			}
 		}
