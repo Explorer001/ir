@@ -1,9 +1,12 @@
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 
 public class CommandLineHandler {
 
@@ -18,15 +21,28 @@ public class CommandLineHandler {
 		} else {
 			//select arguments from string
 			String indexdir = args[2];
-			int searchdepth = Integer.parseInt(args[1]);
+			int searchdepth;
 			String seed = args[0];
 			String query = args[3];
 			
-			if (!seed.matches("^.*://[^/]*/.*")) {
+			if (!seed.matches("^..*://[^/]*/.*")) {
 				System.out.println("Malformed URL");
 				System.out.println("Use URL of format: http://www.example.com/");
 				System.out.println("Aborting");
 				return;
+			} else {
+				try {
+					searchdepth = Integer.parseInt(args[1]);
+				} catch (Exception e) {
+					System.out.println("Searchdepth must be Number!");
+					return;
+				}
+				try {
+					FSDirectory.open(Paths.get(indexdir)).close();;
+				} catch (Exception e) {
+					System.out.println("No such file or directory: " + indexdir);
+					return;
+				}
 			}
 					
 			//crawl the website to specific depth and index while crawling
